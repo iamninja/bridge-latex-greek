@@ -15,6 +15,10 @@
 
 \RequirePackage{xstring}
 \RequirePackage{ifthen}
+% Require pifont for ding-suits
+\RequirePackage{pifont}
+% For colors
+\RequirePackage{color}
 \ProvidesPackage{grbbridge}
 
 % Bids: the logical implementation is \bid{level,denomination}, but we are lazy.
@@ -62,6 +66,25 @@
 \setboolean{hdspellten}{true}
 \setboolean{hdleadingspace}{true}
 \setboolean{hdbetweencards}{true}
+
+% Colored suits option using the pifont suits.
+% If the "coloredsuits" boolean is set to true the colored
+% suits will be used instead. Default: false.
+\newboolean{coloredsuits}
+\setboolean{coloredsuits}{false}
+
+\ifthenelse{\boolean{coloredsuits}}{
+	\renewcommand{\cl}[1]{\mbox{#1\ding{168}}}%
+	\renewcommand{\di}[1]{\mbox{#1{\color{red}\ding{169}}}}%
+	\renewcommand{\he}[1]{\mbox{#1{\color{red}\ding{170}}}}%
+	\renewcommand{\sp}[1]{\mbox{#1\ding{171}}}%
+	%
+	\renewcommand{\clubs}[1]{\mbox{\ding{168}#1}}%
+	\renewcommand{\diamonds}[1]{\mbox{{\color{red}\ding{169}}#1}}%
+	\renewcommand{\hearts}[1]{\mbox{{\color{red}\ding{170}}#1}}%
+	\renewcommand{\spades}[1]{\mbox{\ding{171}#1}}%
+}{}%else
+
 
 %Temporarily we provide just ``spread a suit'', with no capacity to handle odd characters
 %i.e., betweencards=true only works on the obvious symbols
