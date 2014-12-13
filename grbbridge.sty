@@ -85,6 +85,71 @@
 	\renewcommand{\spades}[1]{\mbox{\ding{171}#1}}%
 }{}%else
 
+% Create variables for the terms tha will be translated.
+\newcommand{\boardterm}{Board}
+\newcommand{\dealterm}{Deal}
+\newcommand{\vulterm}{vul}
+% TO-DO dealer
+%
+\newcommand{\northterm}{North}
+\newcommand{\southterm}{South}
+\newcommand{\eastterm}{East}
+\newcommand{\westterm}{West}
+%
+\newcommand{\nterm}{N}
+\newcommand{\sterm}{S}
+\newcommand{\eterm}{E}
+\newcommand{\wterm}{W}
+%
+\newcommand{\nsterm}{NS}
+\newcommand{\ewterm}{EW}
+\newcommand{\noneterm}{None}
+\newcommand{\bothterm}{Both}
+%
+\newcommand{\doubleterm}{Double}
+\newcommand{\rdblterm}{Rdbl}
+%
+\newcommand{\ntterm}{NT}
+\newcommand{\passterm}{Pass}
+\newcommand{\allpassterm}{All Pass}
+%
+
+% Greek instead of english for terms. To use them you need to be sure that
+% greek are rendered correctly on your document.
+% Deal - Παρτίδα
+% Board - Διανομή
+% vul - στη 2η
+% dealer * - Μοιράζει ο *
+% If the "greekterms" boolean is set to true the greek terms
+% will be used instead. Default: false
+\newboolean{greekterms}
+\setboolean{greekterms}{true}
+% Set term variables to greek
+\ifthenelse{\boolean{greekterms}}{
+	\renewcommand{\boardterm}{Διανομή}
+	\renewcommand{\dealterm}{Παρτίδα}
+	\renewcommand{\vulterm}{στη 2η}
+	%
+	\renewcommand{\northterm}{Βορράς}
+	\renewcommand{\southterm}{Νότος}
+	\renewcommand{\eastterm}{Ανατολή}
+	\renewcommand{\westterm}{Δύση}
+	%
+	\renewcommand{\nterm}{Β}
+	\renewcommand{\sterm}{Ν}
+	\renewcommand{\eterm}{Α}
+	\renewcommand{\wterm}{Δ}
+	%
+	\renewcommand{\nsterm}{ΒΝ}
+	\renewcommand{\ewterm}{ΑΔ}
+	\renewcommand{\noneterm}{Κανείς}
+	\renewcommand{\bothterm}{Όλοι}
+	%
+	%
+	\renewcommand{\ntterm}{ΧΑ}
+	\renewcommand{\passterm}{Πάσο}
+	\renewcommand{\allpassterm}{Όλοι Πάσο}
+}{}%else
 
 %Temporarily we provide just ``spread a suit'', with no capacity to handle odd characters
 %i.e., betweencards=true only works on the obvious symbols
@@ -170,18 +235,18 @@
 \newcommand{\west}[2][NoShow]{\def \westcards {#2} \def \westcardlabel {#1} }
 
 \newcommand{\vul}[1]{\IfEqCase{#1}{%
-{o}{\def \vulstring {None vul}}
-{n}{\def \vulstring {NS vul}}
-{e}{\def \vulstring {EW vul}}
-{b}{\def \vulstring {Both vul}}}}
+{o}{\def \vulstring {\noneterm\ \vulterm}}
+{n}{\def \vulstring {\nsterm\ \vulterm}}
+{e}{\def \vulstring {\ewterm\ \vulterm}}
+{b}{\def \vulstring {\bothterm\ \vulterm}}}}
 \newcommand{\dealer}[1]{\IfEqCase{#1}{%
-{n}{\def \dealerstring {North dealer}}
-{e}{\def \dealerstring {East dealer}}
-{s}{\def \dealerstring {South dealer}}
-{w}{\def \dealerstring {West dealer}}}}
+{n}{\def \dealerstring {\northterm\ dealer}}
+{e}{\def \dealerstring {\eastterm\ dealer}}
+{s}{\def \dealerstring {\southterm\ dealer}}
+{w}{\def \dealerstring {\westterm\ dealer}}}}
 
 \newcommand{\boardnum}[1]{\IfInteger{#1}{
-\def \boardnumstring {Board #1}%
+\def \boardnumstring {\boardterm\ #1}%
 \IfEqCase{#1}{%
 {1}{\vul{o}\dealer{n}}
 {2}{\vul{n}\dealer{e}}
@@ -265,9 +330,9 @@
 \IfEq{\northcards\westcards\eastcards\southcards}{NoShowNoShowNoShowNoShow}{}{%
 \enspace\fbox{%enspace added 05 Sep 13 to look better after ccc->clc change.
 \begin{tabular}{@{}c@{ }c@{ }c@{}} 
-&\IfEq{\northcards}{NoShow}{ }{N}&\\
-\IfEq{\westcards}{NoShow}{ }{W}& &\IfEq{\eastcards}{NoShow}{ }{E}\\
-&\IfEq{\southcards}{NoShow}{ }{S}&\\
+&\IfEq{\northcards}{NoShow}{ }{\nterm}&\\
+\IfEq{\westcards}{NoShow}{ }{\wterm}& &\IfEq{\eastcards}{NoShow}{ }{\eterm}\\
+&\IfEq{\southcards}{NoShow}{ }{\sterm}&\\
 \end{tabular}
 }}}
 %\end{center}%
@@ -310,12 +375,12 @@
 \RequirePackage{float}
 \floatstyle{ruled}
 \newfloat{deal}{htb}{lod}
-\floatname{deal}{Deal}
+\floatname{deal}{\dealterm}
 
 %AUCTION: a command to automatically format an auction into a nice table
 
-\newcommand{\dblstring}{Double}
-\newcommand{\rdblstring}{Rdbl}
+\newcommand{\dblstring}{\doubleterm}
+\newcommand{\rdblstring}{\rdblterm}
 
 % Up to version 2.1.1, \auction hard-coded ``,p,p,p'' at the end of every auction
 %
@@ -334,7 +399,7 @@
 \newcommand{\genauction}[3][NoShow]{%
 \gdef \seat@counter {0} %GDEF not DEF is important, otherwise it can't see the counter inside-vs-outside the for loop
 \begin{tabular}{llll}
-West&North&East&South\\%
+\westterm&\northterm&\eastterm&\southterm\\%
 \IfEq{#1}{NoShow}{}{%
 \@for \thislabel:=#1 \do {\textit{\thislabel} \incrementcounter}%
 \IfEq{\seat@counter}{0}{}{\gdef seat@counter {0} \\}%
@@ -365,7 +430,7 @@ West&North&East&South\\%
 \newcommand{\nsauction}[2][NoShow]{%
 \gdef \seat@counter {0} %GDEF not DEF is important, otherwise it can't see the counter inside-vs-outside the for loop
 \begin{tabular}{ll}
-North&South\\%
+\northterm&\southterm\\%
 \IfEq{#1}{NoShow}{}{%
 \@for \thislabel:=#1 \do {\textit{\thislabel} \twopersoncounter}%
 \IfEq{\seat@counter}{0}{}{\gdef seat@counter {0} \\}%
@@ -376,7 +441,7 @@ North&South\\%
 \newcommand{\ewauction}[2][NoShow]{%
 \gdef \seat@counter {0} %GDEF not DEF is important, otherwise it can't see the counter inside-vs-outside the for loop
 \begin{tabular}{ll}
-West&East\\%
+\westterm&\eastterm\\%
 \IfEq{#1}{NoShow}{}{%
 \@for \thislabel:=#1 \do {\textit{\thislabel} \twopersoncounter}%
 \IfEq{\seat@counter}{0}{}{\gdef seat@counter {0} \\}%
@@ -395,16 +460,16 @@ West&East\\%
 \StrMid{#1}{2}{2}[\second@char]%
 \StrGobbleLeft{#1}{2}[\minus@two]%
 \IfStrEqCase{\first@char}{%
-{p}{Pass\second@char\minus@two}
-{a}{\IfStrEq{\second@char}{p}{All Pass\minus@two}{a\second@char\minsu@two}}
+{p}{\passterm\second@char\minus@two}
+{a}{\IfStrEq{\second@char}{p}{\allpassterm\minus@two}{a\second@char\minsu@two}}
 {x}{\IfStrEq{\second@char}{x}{\rdblstring\minus@two}{\dblstring\second@char\minus@two}}
-{1}{\IfStrEqCase{\second@char}{{c}{\cl{1}\minus@two}{d}{\di{1}\minus@two}{h}{\he{1}\minus@two}{s}{\sp{1}\minus@two}{n}{1NT\minus@two}}[#1]}
-{2}{\IfStrEqCase{\second@char}{{c}{\cl{2}\minus@two}{d}{\di{2}\minus@two}{h}{\he{2}\minus@two}{s}{\sp{2}\minus@two}{n}{2NT\minus@two}}[#1]}
-{3}{\IfStrEqCase{\second@char}{{c}{\cl{3}\minus@two}{d}{\di{3}\minus@two}{h}{\he{3}\minus@two}{s}{\sp{3}\minus@two}{n}{3NT\minus@two}}[#1]}
-{4}{\IfStrEqCase{\second@char}{{c}{\cl{4}\minus@two}{d}{\di{4}\minus@two}{h}{\he{4}\minus@two}{s}{\sp{4}\minus@two}{n}{4NT\minus@two}}[#1]}
-{5}{\IfStrEqCase{\second@char}{{c}{\cl{5}\minus@two}{d}{\di{5}\minus@two}{h}{\he{5}\minus@two}{s}{\sp{5}\minus@two}{n}{5NT\minus@two}}[#1]}
-{6}{\IfStrEqCase{\second@char}{{c}{\cl{6}\minus@two}{d}{\di{6}\minus@two}{h}{\he{6}\minus@two}{s}{\sp{6}\minus@two}{n}{6NT\minus@two}}[#1]}
-{7}{\IfStrEqCase{\second@char}{{c}{\cl{7}\minus@two}{d}{\di{7}\minus@two}{h}{\he{7}\minus@two}{s}{\sp{7}\minus@two}{n}{7NT\minus@two}}[#1]}}[#1]}
+{1}{\IfStrEqCase{\second@char}{{c}{\cl{1}\minus@two}{d}{\di{1}\minus@two}{h}{\he{1}\minus@two}{s}{\sp{1}\minus@two}{n}{1\ntterm\minus@two}}[#1]}
+{2}{\IfStrEqCase{\second@char}{{c}{\cl{2}\minus@two}{d}{\di{2}\minus@two}{h}{\he{2}\minus@two}{s}{\sp{2}\minus@two}{n}{2\ntterm\minus@two}}[#1]}
+{3}{\IfStrEqCase{\second@char}{{c}{\cl{3}\minus@two}{d}{\di{3}\minus@two}{h}{\he{3}\minus@two}{s}{\sp{3}\minus@two}{n}{3\ntterm\minus@two}}[#1]}
+{4}{\IfStrEqCase{\second@char}{{c}{\cl{4}\minus@two}{d}{\di{4}\minus@two}{h}{\he{4}\minus@two}{s}{\sp{4}\minus@two}{n}{4\ntterm\minus@two}}[#1]}
+{5}{\IfStrEqCase{\second@char}{{c}{\cl{5}\minus@two}{d}{\di{5}\minus@two}{h}{\he{5}\minus@two}{s}{\sp{5}\minus@two}{n}{5\ntterm\minus@two}}[#1]}
+{6}{\IfStrEqCase{\second@char}{{c}{\cl{6}\minus@two}{d}{\di{6}\minus@two}{h}{\he{6}\minus@two}{s}{\sp{6}\minus@two}{n}{6\ntterm\minus@two}}[#1]}
+{7}{\IfStrEqCase{\second@char}{{c}{\cl{7}\minus@two}{d}{\di{7}\minus@two}{h}{\he{7}\minus@two}{s}{\sp{7}\minus@two}{n}{7\ntterm\minus@two}}[#1]}}[#1]}
 
 
 
