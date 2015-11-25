@@ -70,10 +70,10 @@
 % Colored suits option using the pifont suits.
 % If the "coloredsuits" boolean is set to true the colored
 % suits will be used instead. Default: false.
-\newboolean{coloredsuits}
-\setboolean{coloredsuits}{false}
-
-\ifthenelse{\boolean{coloredsuits}}{
+% Define colors first
+\definecolor{orange}{rgb}{1,0.5,0}
+\definecolor{grey}{rgb}{0.3,0.3,0.3}
+\DeclareOption{2color}{
 	\renewcommand{\cl}[1]{\mbox{#1\ding{168}}}%
 	\renewcommand{\di}[1]{\mbox{#1{\color{red}\ding{169}}}}%
 	\renewcommand{\he}[1]{\mbox{#1{\color{red}\ding{170}}}}%
@@ -83,7 +83,22 @@
 	\renewcommand{\diamonds}[1]{\mbox{{\color{red}\ding{169}}#1}}%
 	\renewcommand{\hearts}[1]{\mbox{{\color{red}\ding{170}}#1}}%
 	\renewcommand{\spades}[1]{\mbox{\ding{171}#1}}%
-}{}%else
+}
+
+\DeclareOption{4color}{
+	\renewcommand{\cl}[1]{\mbox{#1{\color{grey}\ding{168}}}}%
+	\renewcommand{\di}[1]{\mbox{#1{\color{orange}\ding{169}}}}%
+	\renewcommand{\he}[1]{\mbox{#1{\color{red}\ding{170}}}}%
+	\renewcommand{\sp}[1]{\mbox{#1\ding{171}}}%
+	%
+	\renewcommand{\clubs}[1]{\mbox{{\color{grey}\ding{168}}#1}}%
+	\renewcommand{\diamonds}[1]{\mbox{{\color{orange}\ding{169}}#1}}%
+	\renewcommand{\hearts}[1]{\mbox{{\color{red}\ding{170}}#1}}%
+	\renewcommand{\spades}[1]{\mbox{\ding{171}#1}}%
+}
+
+\ProcessOptions\relax
+
 
 % Create variables for the terms tha will be translated.
 \newcommand{\boardterm}{Board}
@@ -316,7 +331,7 @@
 \IfEq{\dealerstring}{NoShow}{}{\dealerstring\\}%
 \IfEq{\vulstring}{NoShow}{}{\vulstring\\}%
 \end{tabular}}%
-& 
+&
 %Top center: North
 \IfEq{\northcards}{NoShow}{}{\vhand{\northcards}}%
 &
@@ -329,7 +344,7 @@
 \ifthenelse{\boolean{compasshide}}{}{
 \IfEq{\northcards\westcards\eastcards\southcards}{NoShowNoShowNoShowNoShow}{}{%
 \enspace\fbox{%enspace added 05 Sep 13 to look better after ccc->clc change.
-\begin{tabular}{@{}c@{ }c@{ }c@{}} 
+\begin{tabular}{@{}c@{ }c@{ }c@{}}
 &\IfEq{\northcards}{NoShow}{ }{\nterm}&\\
 \IfEq{\westcards}{NoShow}{ }{\wterm}& &\IfEq{\eastcards}{NoShow}{ }{\eterm}\\
 &\IfEq{\southcards}{NoShow}{ }{\sterm}&\\
@@ -341,10 +356,10 @@
 \IfEq{\eastcards}{NoShow}{}{\vhand{\eastcards}}%
 \\
 %Bottom left blank
-& 
+&
 %Bottom center: South
 \IfEq{\southcards}{NoShow}{}{\vhand{\southcards}}%
-& 
+&
 %Bottom right blank
 \\
 \end{tabular}%
@@ -490,7 +505,7 @@
 \begin{tabular}{l}%
 \refstepcounter{#1}%
 %Apply a label if the user requests one.
-%Generating automatic labels causes collisions if the counter gets reset in the next section, so we only provide these if 
+%Generating automatic labels causes collisions if the counter gets reset in the next section, so we only provide these if
 %you set the reset criterion to ``never''.
 \IfEq{##1}{GenericLabel}{\IfEq{#4}{never}{\label{#1\expandafter\csname\csname format#1\endcsname\endcsname {#1}}}{}}{\label{##1}}%
 %\IfEq{##1}{GenericLabel}{\label{#1\expandafter\csname\csname format#1\endcsname\endcsname {#1}}}{}%
